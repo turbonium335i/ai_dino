@@ -69,7 +69,7 @@ class Dinosaur:
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.rect.x, self.rect.y))
-        pygame.draw.rect(SCREEN, self.color, (self.rect.x, self.rect.y, self.rect.width, self.rect.height), 2)
+        # pygame.draw.rect(SCREEN, self.color, (self.rect.x, self.rect.y, self.rect.width, self.rect.height), 2)
         for obstacle in obstacles:
             pygame.draw.line(SCREEN, self.color, (self.rect.x + 54, self.rect.y + 12), obstacle.rect.center, 2)
 
@@ -190,7 +190,7 @@ def eval_genomes(genomes, config):
             obstacle.update()
             for i, dinosaur in enumerate(dinosaurs):
                 if dinosaur.rect.colliderect(obstacle.rect):
-                    ge[i].fitness -= 1
+                    ge[i].fitness += points
                     remove(i)
 
         for i, dinosaur in enumerate(dinosaurs):
@@ -210,6 +210,8 @@ def eval_genomes(genomes, config):
 
 # Setup the NEAT Neural Network
 def run(config_path):
+
+
     global pop
     config = neat.config.Config(
         neat.DefaultGenome,
@@ -220,7 +222,11 @@ def run(config_path):
     )
 
     pop = neat.Population(config)
-    pop.run(eval_genomes, 50)
+    pop.add_reporter(neat.StdOutReporter(True))
+    stats = neat.StatisticsReporter()
+    pop.add_reporter(stats)
+    # pop.add_reporter(neat.Checkpointer(3))
+    winner = pop.run(eval_genomes, 500)
 
 
 if __name__ == '__main__':
