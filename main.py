@@ -226,7 +226,7 @@ def run(config_path):
     stats = neat.StatisticsReporter()
     pop.add_reporter(stats)
     # pop.add_reporter(neat.Checkpointer(3))
-    winner = pop.run(eval_genomes, 500)
+    winner = pop.run(eval_genomes, 100)
 
 
 if __name__ == '__main__':
